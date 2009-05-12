@@ -140,7 +140,7 @@ namespace Visionador.SimpleConvolverClass
         // Create and set myOutput to a convolutionTemplate suitable for myInput and myTemplate.
         public bool makeMyOutputSuitable()
         {
-            myOutput = createSuitableOutput( myInput, myOutput );
+            myOutput = createSuitableOutput( myInput, myTemplate );
             
             if (myOutput != null)
             {
@@ -148,6 +148,43 @@ namespace Visionador.SimpleConvolverClass
             }
             else
             {
+                return false;
+            }
+        }
+
+        //  Make myOutput myInput and makeMyOutputSuitable().
+        public bool swapAndSuit()
+        {
+            convolutionTemplate oldOutput = myOutput;
+
+            //  Auto-guard against null myOutput because of right-left evaluation and early out.
+            if ((oldOutput != null) && ((myOutput = createSuitableOutput(oldOutput, myTemplate)) != null))
+            {
+                myInput = oldOutput;
+                return true;
+            }
+            else
+            {
+                myOutput = oldOutput;
+                return false;
+            }
+        }
+
+        //  Make myOutput myInput, makeMyOutputSuitable(), and swap in this new template.
+        public bool swapAndSuit(convolutionTemplate theNewTemplate)
+        {
+            convolutionTemplate oldOutput = myOutput;
+
+            //  Auto-guard against null myOutput because of left-right evaluation and short circuit.
+            if ((oldOutput != null) && ((myOutput = createSuitableOutput(oldOutput, theNewTemplate)) != null))
+            {
+                myInput = oldOutput;
+                myTemplate = theNewTemplate;
+                return true;
+            }
+            else
+            {
+                myOutput = oldOutput;
                 return false;
             }
         }

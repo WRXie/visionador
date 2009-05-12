@@ -1,8 +1,0 @@
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\visionador.Properties.Resources.resources
-obj\Debug\visionador.csproj.GenerateResource.Cache
-bin\Debug\visionador.exe
-bin\Debug\visionador.pdb
-obj\Debug\visionador.exe
-obj\Debug\visionador.pdb
-obj\Debug\visionador.Form1.resources

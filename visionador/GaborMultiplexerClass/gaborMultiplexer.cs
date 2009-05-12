@@ -9,8 +9,7 @@ namespace Visionador.GaborMultiplexerClass
     // The construction information for the Gabor multiplexer.
     public struct gaborMultiplexerCinfo
     {
-        public convolutionTemplate myPositiveSignalSource;
-        public convolutionTemplate myNegativeSignalSource;
+        public convolutionTemplate mySignalSource;
         public convolutionTemplate myOutput;
     }
 
@@ -19,32 +18,33 @@ namespace Visionador.GaborMultiplexerClass
     {
         public gaborMultiplexer(gaborMultiplexerCinfo theInfo)
         {
-            myPositiveSignalSource = theInfo.myPositiveSignalSource;
-            myNegativeSignalSource = theInfo.myNegativeSignalSource;
+            mySignalSource = theInfo.mySignalSource;
             myOutput = theInfo.myOutput;
         }
 
         //  Return false if the dimensions don't add up.
         //  consider adding a center value instead of defaulting to 0.
+        //  The upperCeiling and lowerFloor are the max and min expected signal values, respectively,
+        //  which should straddle 0.
         public bool multiplex(double upperCeiling, double lowerFloor)
         {
 
-            if ((myPositiveSignalSource.myWidth == myNegativeSignalSource.myWidth) &&
-                (myPositiveSignalSource.myWidth == myOutput.myWidth) &&
-                (myPositiveSignalSource.myHeight == myNegativeSignalSource.myHeight) &&
-                (myPositiveSignalSource.myHeight == myOutput.myHeight))
+            if ((mySignalSource.myWidth == myOutput.myWidth) &&
+                (mySignalSource.myHeight == myOutput.myHeight))
             {
                 for (int widthCounter = 0; widthCounter < myOutput.myWidth; widthCounter++)
                 {
                     for (int heightCounter = 0; heightCounter < myOutput.myHeight; heightCounter++)
                     {
-                        if (myPositiveSignalSource[widthCounter, heightCounter] > 0.0f)
+                        if (mySignalSource[widthCounter, heightCounter] > 0.0f)
                         {
-                            myOutput[widthCounter, heightCounter] = upperCeiling - myPositiveSignalSource[widthCounter, heightCounter];
+                            //myOutput[widthCounter, heightCounter] = upperCeiling - mySignalSource[widthCounter, heightCounter];
+                            myOutput[widthCounter, heightCounter] = upperCeiling - Math.Min( mySignalSource[widthCounter, heightCounter], upperCeiling );
                         }
-                        else if (myNegativeSignalSource[widthCounter, heightCounter] > 0.0f)
+                        else if (mySignalSource[widthCounter, heightCounter] < 0.0f)
                         {
-                            myOutput[widthCounter, heightCounter] = myNegativeSignalSource[widthCounter, heightCounter] - lowerFloor;
+                            //myOutput[widthCounter, heightCounter] = -mySignalSource[widthCounter, heightCounter] + lowerFloor;
+                            myOutput[widthCounter, heightCounter] = -Math.Max( mySignalSource[widthCounter, heightCounter], lowerFloor ) + lowerFloor;
                         }
                         else
                         {
@@ -61,8 +61,7 @@ namespace Visionador.GaborMultiplexerClass
             }
         }
 
-        public convolutionTemplate myPositiveSignalSource;
-        public convolutionTemplate myNegativeSignalSource;
+        public convolutionTemplate mySignalSource;
         public convolutionTemplate myOutput;
     }
 }

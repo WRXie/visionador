@@ -51,8 +51,8 @@ namespace Visionador.ConvolutionTemplateClass.GaborTemplateClass
             {
                 for (int heightCounter = 0; heightCounter < myHeight; heightCounter++)
                 {
-                    double thisX = ((widthCounter - getEffWidth()) / myScaleWidth);
-                    double thisY = ((heightCounter - getEffHeight()) / myScaleHeight);
+                    double thisX = ((widthCounter - getEffWidth()) * myScaleWidth);
+                    double thisY = ((heightCounter - getEffHeight()) * myScaleHeight);
 
                     if (Convert.ToBoolean(amIcos))
                     {
@@ -78,7 +78,8 @@ namespace Visionador.ConvolutionTemplateClass.GaborTemplateClass
         public double myOrientation;
         public double myVariance;
 
-        // The dimensions of the rectangular patch this template represents.
+        // The length that a single pixel represents.
+        // The row [0, myWidth] will be mapped onto [-myWidth * myScaleWidth, myWidth * myScaleWidth]
         public double myScaleWidth;
         public double myScaleHeight;
 
